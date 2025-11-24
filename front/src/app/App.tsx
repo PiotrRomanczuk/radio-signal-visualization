@@ -27,7 +27,8 @@ function App() {
 				</div>
 				<div className='controls'>
 					<label htmlFor='history-slider'>
-						History Length: {maxHistory} snapshots ({(maxHistory * 0.1).toFixed(1)}s)
+						History Length: {maxHistory} snapshots (
+						{(maxHistory * 0.1).toFixed(1)}s)
 					</label>
 					<input
 						id='history-slider'

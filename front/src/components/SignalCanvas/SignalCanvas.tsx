@@ -3,7 +3,10 @@ import type { SignalCanvasProps } from '../../types';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../../config/constants';
 import { mapValueToHSL } from '../../utils/colorMapping';
 
-export function SignalCanvas({ signalData, maxHistory = 100 }: SignalCanvasProps) {
+export function SignalCanvas({
+	signalData,
+	maxHistory = 100,
+}: SignalCanvasProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [history, setHistory] = useState<number[][]>([]);
 
