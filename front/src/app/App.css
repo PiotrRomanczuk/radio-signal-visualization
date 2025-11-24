@@ -33,6 +33,58 @@
   font-size: 1rem;
 }
 
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.controls label {
+  font-size: 0.95rem;
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.history-slider {
+  width: 300px;
+  height: 6px;
+  background: #3a3a3a;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.history-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #646cff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.history-slider::-webkit-slider-thumb:hover {
+  background: #535bf2;
+}
+
+.history-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #646cff;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.history-slider::-moz-range-thumb:hover {
+  background: #535bf2;
+}
+
 .status-indicator {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;

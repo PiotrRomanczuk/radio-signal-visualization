@@ -3,9 +3,7 @@ import type { SignalCanvasProps } from '../../types';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../../config/constants';
 import { mapValueToHSL } from '../../utils/colorMapping';
 
-const MAX_HISTORY = 100; // Keep last 100 data updates
-
-export function SignalCanvas({ signalData }: SignalCanvasProps) {
+export function SignalCanvas({ signalData, maxHistory = 100 }: SignalCanvasProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [history, setHistory] = useState<number[][]>([]);
 
@@ -17,13 +15,13 @@ export function SignalCanvas({ signalData }: SignalCanvasProps) {
 
 		setHistory((prev) => {
 			const newHistory = [...prev, signalData];
-			// Keep only last MAX_HISTORY updates
-			if (newHistory.length > MAX_HISTORY) {
-				return newHistory.slice(newHistory.length - MAX_HISTORY);
+			// Keep only last maxHistory updates
+			if (newHistory.length > maxHistory) {
+				return newHistory.slice(newHistory.length - maxHistory);
 			}
 			return newHistory;
 		});
-	}, [signalData]);
+	}, [signalData, maxHistory]);
 
 	// Render the canvas
 	useEffect(() => {
@@ -50,7 +48,7 @@ export function SignalCanvas({ signalData }: SignalCanvasProps) {
 
 			dataSnapshot.forEach((value, signalIndex) => {
 				const y = signalIndex * lineHeight;
-				
+
 				ctx.fillStyle = mapValueToHSL(value);
 				ctx.fillRect(x, y, Math.ceil(pixelWidth), Math.ceil(lineHeight));
 			});
