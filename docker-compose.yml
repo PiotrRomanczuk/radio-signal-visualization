@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: radio-signal-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    networks:
+      - radio-signal-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: radio-signal-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    environment:
+      - VITE_WS_URL=ws://localhost:3000
+    networks:
+      - radio-signal-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  radio-signal-network:
+    driver: bridge
