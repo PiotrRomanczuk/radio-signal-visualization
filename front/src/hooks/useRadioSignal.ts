@@ -14,10 +14,19 @@ export function useRadioSignal(wsUrl: string): UseRadioSignalReturn {
 
 	const handleMessage = useCallback((event: MessageEvent) => {
 		try {
-			const data = JSON.parse(event.data) as SignalData;
+			const data = JSON.parse(event.data);
+
+			// Validate that data is an array
+			if (!Array.isArray(data)) {
+				console.warn('Received non-array data:', data);
+				return;
+			}
+
+			console.log('Received signal data:', data.length, 'values');
 			setSignalData(data);
 			setError(null);
 		} catch (err) {
+			console.error('Failed to parse signal data:', err);
 			setError(new Error('Failed to parse signal data'));
 		}
 	}, []);

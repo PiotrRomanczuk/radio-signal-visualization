@@ -13,7 +13,13 @@ export const createWebSocketServer = (server: HttpServer) => {
 
 	wss.on('connection', (ws: WebSocket) => {
 		console.log('New WebSocket client connected');
-		ws.send(JSON.stringify({ message: 'WebSocket connection established' }));
+		// Send initial signal data immediately
+		const initialSignalData = generateSignal(
+			SIGNAL_LENGTH,
+			MIN_VALUE,
+			MAX_VALUE
+		);
+		ws.send(JSON.stringify(initialSignalData));
 	});
 
 	const intervalId = setInterval(() => {

@@ -1,6 +1,7 @@
 import './App.css';
 import { useRadioSignal } from '../hooks/useRadioSignal';
 import { SignalCanvas } from '../components/SignalCanvas';
+import { SignalTable } from '../components/SignalTable';
 import { WS_URL } from '../config/constants';
 
 function App() {
@@ -24,7 +25,12 @@ function App() {
 				</div>
 			</header>
 			<main className='app-main'>
-				<SignalCanvas signalData={signalData} />
+				<div className='visualization-section'>
+					<SignalCanvas signalData={signalData} />
+				</div>
+				<div className='data-section'>
+					<SignalTable signalData={signalData} />
+				</div>
 			</main>
 			<footer className='app-footer'>
 				<p>

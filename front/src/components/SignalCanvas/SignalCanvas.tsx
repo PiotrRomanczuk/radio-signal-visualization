@@ -1,16 +1,31 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SignalCanvasProps } from '../../types';
-import {
-	CANVAS_WIDTH,
-	CANVAS_HEIGHT,
-	GRID_COLUMNS,
-	GRID_ROWS,
-} from '../../config/constants';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../../config/constants';
 import { mapValueToHSL } from '../../utils/colorMapping';
+
+const MAX_HISTORY = 100; // Keep last 100 data updates
 
 export function SignalCanvas({ signalData }: SignalCanvasProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const [history, setHistory] = useState<number[][]>([]);
 
+	// Update history when new data arrives
+	useEffect(() => {
+		if (!signalData || !Array.isArray(signalData) || signalData.length === 0) {
+			return;
+		}
+
+		setHistory((prev) => {
+			const newHistory = [...prev, signalData];
+			// Keep only last MAX_HISTORY updates
+			if (newHistory.length > MAX_HISTORY) {
+				return newHistory.slice(newHistory.length - MAX_HISTORY);
+			}
+			return newHistory;
+		});
+	}, [signalData]);
+
+	// Render the canvas
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
@@ -22,27 +37,25 @@ export function SignalCanvas({ signalData }: SignalCanvasProps) {
 		ctx.fillStyle = '#000000';
 		ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-		// If no data, just show empty black canvas
-		if (!signalData || signalData.length === 0) {
+		if (history.length === 0) {
 			return;
 		}
 
-		// Calculate cell dimensions
-		const cellWidth = CANVAS_WIDTH / GRID_COLUMNS;
-		const cellHeight = CANVAS_HEIGHT / GRID_ROWS;
+		// Draw 1000 horizontal lines, each showing history of one signal point
+		const lineHeight = CANVAS_HEIGHT / 1000;
+		const pixelWidth = CANVAS_WIDTH / history.length;
 
-		// Draw each cell
-		signalData.forEach((value: number, index: number) => {
-			const row = Math.floor(index / GRID_COLUMNS);
-			const col = index % GRID_COLUMNS;
+		history.forEach((dataSnapshot, timeIndex) => {
+			const x = timeIndex * pixelWidth;
 
-			const x = col * cellWidth;
-			const y = row * cellHeight;
-
-			ctx.fillStyle = mapValueToHSL(value);
-			ctx.fillRect(x, y, cellWidth, cellHeight);
+			dataSnapshot.forEach((value, signalIndex) => {
+				const y = signalIndex * lineHeight;
+				
+				ctx.fillStyle = mapValueToHSL(value);
+				ctx.fillRect(x, y, Math.ceil(pixelWidth), Math.ceil(lineHeight));
+			});
 		});
-	}, [signalData]);
+	}, [history]);
 
 	return (
 		<canvas

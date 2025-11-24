@@ -10,7 +10,6 @@
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  min-height: 100vh;
 }
 
 .app-header {
@@ -60,8 +59,19 @@
 
 .app-main {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  align-items: flex-start;
+}
+
+.visualization-section {
+  flex-shrink: 0;
+}
+
+.data-section {
+  flex: 1;
+  min-width: 0;
 }
 
 .signal-canvas {
