@@ -1,13 +1,39 @@
-import './App.css'
+import './App.css';
+import { useRadioSignal } from '../hooks/useRadioSignal';
+import { SignalCanvas } from '../components/SignalCanvas';
+import { WS_URL } from '../config/constants';
 
 function App() {
-  return (
-    <div className="App">
-      <h1>Radio Signal Visualization</h1>
-      <p>Backend connected and ready</p>
-      <p>Frontend structure updated - components coming soon</p>
-    </div>
-  )
+	const { signalData, isConnected, error } = useRadioSignal(WS_URL);
+
+	return (
+		<div className='App'>
+			<header className='app-header'>
+				<h1>Radio Signal Visualization</h1>
+				<div className='status'>
+					<span
+						className={`status-indicator ${
+							isConnected ? 'connected' : 'disconnected'
+						}`}
+					>
+						{isConnected ? '● Connected' : '○ Disconnected'}
+					</span>
+					{error && (
+						<span className='error-message'>Error: {error.message}</span>
+					)}
+				</div>
+			</header>
+			<main className='app-main'>
+				<SignalCanvas signalData={signalData} />
+			</main>
+			<footer className='app-footer'>
+				<p>
+					Real-time WebSocket data visualization • 1000 signal points • Updates
+					every 100ms
+				</p>
+			</footer>
+		</div>
+	);
 }
 
-export default App
+export default App;
